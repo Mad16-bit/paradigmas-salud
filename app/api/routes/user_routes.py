@@ -3,9 +3,11 @@ from sqlalchemy.orm import Session
 
 from app.infrastructure.db import get_db
 from app.infrastructure.prolog_engine import obtener_recomendaciones_desde_prolog
+from app.infrastructure.security import hash_password, verify_password
 from app.models.db_models import Condicion, PerfilSaludDB, ProgresoSemanal, Usuario
 from app.schemas.health_models import PerfilSalud
 from app.schemas.user_models import (
+    LoginRequest,
     PerfilCreate,
     PerfilResponse,
     ProgresoCreate,
@@ -42,10 +44,22 @@ def crear_usuario(payload: UsuarioCreate, db: Session = Depends(get_db)):
     existente = db.query(Usuario).filter(Usuario.correo == payload.correo).first()
     if existente is not None:
         raise HTTPException(status_code=400, detail="Ya existe un usuario con ese correo")
-    usuario = Usuario(nombre=payload.nombre, correo=payload.correo)
+    usuario = Usuario(
+        nombre=payload.nombre,
+        correo=payload.correo,
+        password_hash=hash_password(payload.password),
+    )
     db.add(usuario)
     db.commit()
     db.refresh(usuario)
+    return usuario
+
+
+@router.post("/login", response_model=UsuarioResponse)
+def login(payload: LoginRequest, db: Session = Depends(get_db)):
+    usuario = db.query(Usuario).filter(Usuario.correo == payload.correo).first()
+    if usuario is None or not verify_password(payload.password, usuario.password_hash):
+        raise HTTPException(status_code=401, detail="Credenciales inválidas")
     return usuario
 
 

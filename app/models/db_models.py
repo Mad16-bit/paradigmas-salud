@@ -29,6 +29,7 @@ class Usuario(Base):
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String, nullable=False)
     correo = Column(String, nullable=False, unique=True, index=True)
+    password_hash = Column(String, nullable=False)
     creado_en = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
     perfiles = relationship("PerfilSaludDB", back_populates="usuario")

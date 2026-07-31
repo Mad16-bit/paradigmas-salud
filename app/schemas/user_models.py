@@ -31,6 +31,7 @@ class NivelEstresEnum(str, Enum):
 class UsuarioCreate(BaseModel):
     nombre: str
     correo: str
+    password: str
 
 
 class UsuarioResponse(BaseModel):
@@ -40,6 +41,11 @@ class UsuarioResponse(BaseModel):
     nombre: str
     correo: str
     creado_en: datetime
+
+
+class LoginRequest(BaseModel):
+    correo: str
+    password: str
 
 
 class PerfilCreate(BaseModel):

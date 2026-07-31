@@ -13,6 +13,7 @@ def root():
             {"method": "GET", "path": "/", "description": "Estado general de la API"},
             {"method": "POST", "path": "/recommendations", "description": "Genera recomendaciones de salud"},
             {"method": "POST", "path": "/users", "description": "Crea un usuario"},
+            {"method": "POST", "path": "/login", "description": "Verifica credenciales y devuelve el usuario"},
             {"method": "POST", "path": "/profiles", "description": "Crea un perfil de salud para un usuario"},
             {"method": "GET", "path": "/profiles/{user_id}", "description": "Obtiene el perfil más reciente de un usuario"},
             {"method": "GET", "path": "/profiles/{user_id}/history", "description": "Obtiene el historial de perfiles de un usuario"},
