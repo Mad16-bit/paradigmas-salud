@@ -4,8 +4,6 @@ from pyswip import Prolog
 prolog = Prolog()
 prolog.consult("prolog/salud_rules.pl")
 
-progreso_semanal = []
-
 
 def obtener_recomendaciones_desde_prolog(perfil):
     recomendados = set()
@@ -58,19 +56,4 @@ def obtener_recomendaciones_desde_prolog(perfil):
         },
         "ejercicio": ejercicios_finales,
         "descanso": sorted(descanso)
-    }
-
-
-def guardar_progreso(registro):
-    progreso_semanal.append(registro.model_dump())
-    return {
-        "mensaje": "Progreso semanal registrado correctamente",
-        "registro": registro
-    }
-
-
-def listar_progreso():
-    return {
-        "total_registros": len(progreso_semanal),
-        "registros": progreso_semanal
     }
