@@ -15,7 +15,7 @@ from app.schemas.user_models import (
     UsuarioCreate,
     UsuarioResponse,
 )
-
+from app.services.ia_service import humanizar_recomendacion
 router = APIRouter()
 
 
@@ -140,7 +140,17 @@ def obtener_recomendaciones_usuario(user_id: int, db: Session = Depends(get_db))
         objetivo=perfil.objetivo,
         nivel_estres=perfil.nivel_estres,
     )
-    return obtener_recomendaciones_desde_prolog(perfil_pydantic)
+    # Obtenemos las recomendaciones desde Prolog
+    resultado_prolog = obtener_recomendaciones_desde_prolog(perfil_pydantic)
+
+    # Generamos la versión humanizada con Gemini
+    explicacion_humanizada = humanizar_recomendacion(resultado_prolog)
+
+    # Retornamos la estructura combinada
+    return {
+        "resultado_estructurado": resultado_prolog,
+        "explicacion_humanizada": explicacion_humanizada,
+    }
 
 
 @router.post("/progress", response_model=ProgresoResponse, status_code=status.HTTP_201_CREATED)
